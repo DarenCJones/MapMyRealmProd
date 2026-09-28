@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#111a1b">
+    <meta name="description" content="Private member area for Map My Realm.">
+    <title>Members — Map My Realm</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg"><link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../theme.css">
+    <script src="../content.js" defer></script><script src="../site.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2" defer></script>
+    <script src="./config.js" defer></script><script src="./members.js" defer></script>
+  </head>
+  <body data-page="members"><a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header"><div class="shell nav-row"><a class="wordmark" href="../" aria-label="Map My Realm home"><span class="wordmark-mark" aria-hidden="true">M<span>.</span></span><span data-site-title>Map My Realm</span></a><nav class="main-nav" aria-label="Main navigation"><a href="../maps/">Maps</a><a href="../projects/">Projects</a><a href="../tutorials/">Tutorials</a><a href="../blog/">Blog</a><a href="../members/" aria-current="page">Members</a><a href="../about/">About</a></nav></div></header>
+    <main id="main"><section class="page-intro shell" aria-labelledby="page-title"><a class="back-link" href="../">← Home</a><p class="section-kicker">05 / THE INNER CIRCLE</p><h1 id="page-title">Members</h1><p>Private maps, posts, and an owner workspace for drafts.</p></section>
+      <section class="member-area shell" aria-label="Private area">
+        <p class="member-message" id="member-message" role="status" aria-live="polite">Checking access…</p>
+        <div class="member-panel" id="setup-panel" hidden><h2>Private realm setup</h2><p>The member area is prepared and will open once its secure data service is connected.</p></div>
+        <form class="member-panel member-form" id="login-form" hidden><h2>Sign in</h2><p>Enter the email address that was invited. You’ll receive a one-time sign-in link.</p><label for="login-email">Email address</label><input id="login-email" name="email" type="email" autocomplete="email" required><button type="submit">Send sign-in link</button></form>
+        <div id="member-dashboard" hidden><div class="dashboard-head"><div><p class="section-kicker" id="member-role"></p><h2>Private collection</h2></div><button class="quiet-button" id="sign-out" type="button">Sign out</button></div><div class="member-grid" id="member-entries"></div></div>
+        <form class="member-panel member-form" id="owner-form" hidden><h2 id="editor-title">Create a draft</h2><p>Drafts are visible only to you. Publish when invited readers may see them.</p><label for="entry-title">Title</label><input id="entry-title" name="title" required maxlength="160"><label for="entry-kind">Type</label><select id="entry-kind" name="kind"><option value="post">Post</option><option value="map">Map</option></select><label for="entry-summary">Short description</label><input id="entry-summary" name="summary" maxlength="280"><label for="entry-body">Content</label><textarea id="entry-body" name="body" rows="8" required></textarea><label for="entry-image">Map image (optional)</label><input id="entry-image" name="image" type="file" accept="image/png,image/jpeg,image/webp"><div class="form-actions"><button type="submit">Save draft</button><button class="quiet-button" id="cancel-edit" type="button" hidden>Cancel edit</button></div></form>
+      </section>
+    </main>
+    <footer class="site-footer"><div class="shell footer-row"><a class="footer-brand" href="../" data-site-title>Map My Realm</a><p><span id="copyright"></span> Daren Jones · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0</a></p><span>MAPS · CODE · NOTES</span></div></footer>
+  </body>
+</html>
