@@ -1,6 +1,6 @@
 # Map My Realm
 
-A personal website for maps, coding projects, tutorials, a blog, and an invitation-only Members area, prepared for `www.mapmyrealm.com`. The public site is plain HTML, CSS, and JavaScript, so there is no build step.
+A personal website for maps, coding projects, tutorials, a blog, and an invitation-only Members area. The live site is [DarenCJones.github.io/MapMyRealmProd](https://darencjones.github.io/MapMyRealmProd/). The public site is plain HTML, CSS, and JavaScript, so there is no build step.
 
 ## Make it yours
 
@@ -10,16 +10,21 @@ For an interactive map, copy its exported HTML/CSS/JS files into `maps/my-map/` 
 
 The home page is an introduction. Maps, code projects, tutorials, Blog, Members, and About each have their own page. Their navigation links are in each HTML file; edit those pages if you rename a section.
 
-## Activate the private Members area
+## Private Members area
 
-GitHub Pages publishes its files openly. **Never put private posts, drafts, map images, passwords, or service-role keys in this repository.** The Members page uses Supabase Auth, database Row Level Security, and a private Storage bucket to protect the actual content. Until a Supabase project is connected, the page shows a setup message and does not claim that login is active.
+GitHub Pages publishes its files openly. **Never put private posts, drafts, map images, passwords, or service-role keys in this repository.** The Members page uses Supabase Auth, database Row Level Security, and a private Storage bucket to protect the actual content. The Supabase project, owner role, and sign-in redirect are configured. The owner invitation was sent to `DarenCjones@gmail.com`; accept that email invitation to sign in.
 
-1. Create a Supabase account and project at [supabase.com/dashboard](https://supabase.com/dashboard). Use a strong database password and keep it out of this repository.
-2. In the Supabase SQL Editor, run [`members/setup.sql`](members/setup.sql). This creates membership roles, private entries, a private image bucket, and access rules.
-3. In **Authentication → URL Configuration**, set the site URL to `https://www.mapmyrealm.com` and allow `https://www.mapmyrealm.com/members/` as a redirect URL. Add the local preview URL only while testing locally.
-4. In **Authentication → Users**, invite your own email. Once that user exists, run the commented owner-role `insert` at the end of `members/setup.sql`, replacing `OWNER_EMAIL_HERE` with your email. Invite readers in the same place and add each one to `realm_members` with role `reader`. Leave public signups disabled; the site also sends magic links with `shouldCreateUser: false`.
-5. The project URL and publishable key are already in [`members/config.js`](members/config.js). These are browser-facing values; **never use a secret or service-role key there**. After the SQL, redirects, and owner role are set, change `enabled` to `true` and publish the site again.
-6. Test with your owner account and one invited-reader account. The owner should see drafts and be able to create, edit, and publish them. The reader should see only published private entries. An uninvited account should see no content.
+The database was initialized with [`members/setup.sql`](members/setup.sql). Supabase Authentication is configured with site URL `https://darencjones.github.io/MapMyRealmProd/` and allowed redirect `https://darencjones.github.io/MapMyRealmProd/members/`. Public signups are disabled. The project URL and browser-safe publishable key are in [`members/config.js`](members/config.js); **never put a secret or service-role key there**.
+
+To add a reader, invite their email in **Supabase → Authentication → Users**, then assign the `reader` role to that invited account with a SQL query like this (replace the address):
+
+```sql
+insert into public.realm_members (user_id, role)
+select id, 'reader' from auth.users where lower(email) = lower('reader@example.com')
+on conflict (user_id) do update set role = 'reader';
+```
+
+After accepting the owner invitation, test creating and publishing a private entry. With an invited-reader account, check that published entries appear and drafts remain hidden.
 
 Private map images are uploaded to the `realm-private` bucket from the owner workspace. Interactive map exports made of HTML and JavaScript cannot be kept private by merely placing them in the GitHub Pages repository; those would need a separate protected hosting solution.
 
@@ -27,11 +32,8 @@ To preview locally, serve this folder with a static web server and open its loca
 
 ## Publish with GitHub Pages
 
-1. Create a **new** GitHub repository, such as `DarenCjones/mapmyrealm-site`. Keep the existing `DarenCjones/MapmyRealm` repository unchanged. Upload these files to the new repository's `main` branch, keeping `.github/workflows/pages.yml` and `.nojekyll`.
-2. In the repository, open **Settings → Pages** and set **Build and deployment → Source** to **GitHub Actions**.
-3. In **Settings → Pages**, enter `www.mapmyrealm.com` as the custom domain. The `CNAME` file is included for portability, but GitHub Pages uses the setting when publishing through GitHub Actions. Point the domain's `www` CNAME record to `DarenCjones.github.io` at your DNS provider. Turn on **Enforce HTTPS** once GitHub makes it available.
-4. Open **Actions → Publish to GitHub Pages** to follow the deployment. The deployment URL appears in the workflow result and in **Settings → Pages**.
+The site is in the **new** repository [`DarenCJones/MapMyRealmProd`](https://github.com/DarenCJones/MapMyRealmProd), with GitHub Actions as its Pages source. The older `DarenCjones/MapmyRealm` repository remains untouched. The custom domain is not assigned to this repository; for now use the live GitHub Pages URL above. Each push to `main` triggers `.github/workflows/pages.yml` and publishes the public site.
 
-Each later push to `main` publishes the site again. The workflow uses GitHub's official Pages actions and needs no secret or personal access token.
+The workflow uses GitHub's official Pages actions and needs no secret or personal access token.
 
 GitHub Pages serves all public pages, CSS, JavaScript, and images from this repository. Supabase only handles sign-in and content in the private Members area. The public site keeps working if Supabase is temporarily unavailable.
